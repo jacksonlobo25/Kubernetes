@@ -55,13 +55,13 @@ spec:
     metadata:
       labels:
         app: mongodb
-    command: ['sh', '-c', 'chown -R 999:999 /data/db']
     spec:
       containers:
         - name: mongodb
           image: mongo:latest
           ports:
             - containerPort: 27017
+          command: ['sh', '-c', 'chown -R 999:999 /data/db']
           envFrom:
             - configMapRef:
                 name: mongodb-config
