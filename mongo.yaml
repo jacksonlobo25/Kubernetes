@@ -9,14 +9,12 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: mongo-persistent-storage
   mountOptions:
     - hard
     - nfsvers=4.1
   nfs:
     path: /mnt/nfs_share
     server: 10.128.0.28
-
 
 ---
 
@@ -32,7 +30,6 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
-  storageClassName: mongo-persistent-storage
 
 ---
 
