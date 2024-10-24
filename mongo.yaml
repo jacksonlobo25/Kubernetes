@@ -61,6 +61,9 @@ spec:
           image: mongo:latest
           ports:
             - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_SKIP_CHOWN
+              value: "true"
           envFrom:
             - configMapRef:
                 name: mongodb-config
