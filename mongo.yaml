@@ -26,11 +26,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: mongo-pvc
 spec:
-  accessModes:
-    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
   storageClassName: mongo-persistent-storage
 
 ---
