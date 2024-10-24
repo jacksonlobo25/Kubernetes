@@ -34,7 +34,10 @@ spec:
                 configMapKeyRef:
                   name: mongodb-config
                   key: MONGO_INITDB_ROOT_PASSWORD
+
 ---
+
+
 apiVersion: v1
 kind: Service
 metadata:
