@@ -42,9 +42,7 @@ data:
   MONGO_INITDB_ROOT_USERNAME: springuser
   MONGO_INITDB_ROOT_PASSWORD: springpassword
 ---
-
-
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb
@@ -58,13 +56,6 @@ spec:
       labels:
         app: mongodb
     spec:
-      initContainers:
-        - name: init-permissions
-          image: busybox
-          command: ['sh', '-c', 'chown -R 999:999 /data/db']
-          volumeMounts:
-            - name: mongo-persistent-storage
-              mountPath: /data/db
       containers:
         - name: mongodb
           image: mongo:latest
@@ -80,7 +71,6 @@ spec:
         - name: mongo-persistent-storage
           persistentVolumeClaim:
             claimName: mongo-pvc
-
 
 ---
 
