@@ -14,4 +14,7 @@ kubectl delete pvc --all
 echo "Deleting all PersistentVolumes (PVs)..."
 kubectl delete pv --all
 
+echo "Deleting all Storage Classes (SCs)..."
+kubectl delete sc --all
+
 echo "Cleanup complete."
