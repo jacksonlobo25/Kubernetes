@@ -1,15 +1,7 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: efs-sc
-provisioner: efs.csi.aws.com
-
----
-
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: efs-pv
+  name: mongo-efs-pv
 spec:
   capacity:
     storage: 1Gi
@@ -22,12 +14,13 @@ spec:
     driver: efs.csi.aws.com
     volumeHandle: fs-0b38d0f3f783092be
 
+
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: efs-pvc
+  name: mongo-efs-pvc
 spec:
   accessModes:
     - ReadWriteMany
@@ -36,20 +29,32 @@ spec:
     requests:
       storage: 1Gi
 
+
 ---
 
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: efs-app
+  name: mongo
 spec:
-  containers:
-  - name: app
-    image: nginx
-    volumeMounts:
-    - name: efs-storage
-      mountPath: /usr/share/nginx/html
-  volumes:
-  - name: efs-storage
-    persistentVolumeClaim:
-      claimName: efs-pvc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongo-storage
+          persistentVolumeClaim:
+            claimName: mongo-efs-pvc
