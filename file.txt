@@ -5,4 +5,4 @@ kubectl apply -f spring.yaml
 chmod +x cleanup_kubernetes.sh
 ./cleanup_kubernetes.sh
 
-kubectl apply -f Sample_AWS/aws.yaml
+
