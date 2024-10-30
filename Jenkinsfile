@@ -5,6 +5,7 @@ pipeline {
     environment {
 
         DOCKER_IMAGE_SPRING = jacksonlobo/springboot-app - Docker Image
+        DOCKER_VERSION = 1.0.0
 
     }
  
