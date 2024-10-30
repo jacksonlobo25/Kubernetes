@@ -1,90 +1,21 @@
 pipeline {
-
     agent any
- 
+    
     environment {
-
-        DOCKER_IMAGE_SPRING = jacksonlobo/springboot-app 
-        DOCKER_VERSION = 1.0.0
-
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // Replace with your Jenkins credentials ID
     }
- 
+
     stages {
- 
-        stage('Build') {
-
+        stage('Build Docker Image') {
             steps {
-                sh 'echo success'
-                sh './mvnw clean package -DskipTests'
-
+                script {
+                    def dockerImage = docker.build("jacksonlobo/springboot-app:${env.BUILD_NUMBER}", "backend/")
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push('latest')
+                    }
+                }
             }
-
         }
- 
-        // stage('Build Docker Image') {
-
-        //     steps {
-
-        //         sh "docker build -t ${jacksonlobo/springboot-app - Docker Image}
-
-        //     }
-
-        // }
- 
-        // stage('Push Docker Image') {
-
-        //     steps {
-
-        //         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-
-        //         sh "docker push ${jacksonlobo/springboot-app - Docker Image}"
-
-        //     }
-
-        // }
- 
-        // stage('Create Namespace') {
-
-        //     steps {
-
-        //         withCredentials([kubeconfig(credentialsId: KUBE_CONFIG_CREDENTIALS_ID)]) {
-
-        //             sh "kubectl apply -f namespace.yaml"
-
-        //         }
-
-        //     }
-
-        // }
- 
-        // stage('Deploy MongoDB') {
-
-        //     steps {
-
-        //         withCredentials([kubeconfig(credentialsId: KUBE_CONFIG_CREDENTIALS_ID)]) {
-
-        //             sh "kubectl apply -f mongo.yaml -n ${K8S_NAMESPACE}"
-
-        //         }
-
-        //     }
-
-        // }
- 
-        // stage('Deploy Spring Boot App') {
-
-        //     steps {
-
-        //         withCredentials([kubeconfig(credentialsId: KUBE_CONFIG_CREDENTIALS_ID)]) {
-
-        //             sh "kubectl apply -f spring.yaml -n ${K8S_NAMESPACE}"
-
-        //         }
-
-        //     }
-
-        // }
-
     }
-
 }
