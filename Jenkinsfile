@@ -4,7 +4,7 @@ pipeline {
  
     environment {
 
-        DOCKER_IMAGE_SPRING = jacksonlobo/springboot-app - Docker Image
+        DOCKER_IMAGE_SPRING = jacksonlobo/springboot-app 
         DOCKER_VERSION = 1.0.0
 
     }
