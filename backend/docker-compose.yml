@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: springuser
+      MONGO_INITDB_ROOT_PASSWORD: springpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: springbootdb
+      SPRING_DATA_MONGODB_USERNAME: springuser
+      SPRING_DATA_MONGODB_PASSWORD: springpassword
+
+volumes:
+  mongo-data:

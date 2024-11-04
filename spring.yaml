@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: springboot-app
+          image: jacksonlobo/springboot-app:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATA_MONGODB_HOST
+              value: mongodb-service
+            - name: SPRING_DATA_MONGODB_PORT
+              value: "27017"
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: springbootdb
+            - name: SPRING_DATA_MONGODB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-config
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: SPRING_DATA_MONGODB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-config
+                  key: MONGO_INITDB_ROOT_PASSWORD
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-app-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30001
+  selector:
+    app: springboot-app
