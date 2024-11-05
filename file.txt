@@ -2,12 +2,17 @@ kubectl apply -f mongo.yaml
 
 kubectl apply -f spring.yaml
 
-kubectl apply -f SecretToken/jenkins-admin-sa.yaml
-kubectl apply -f SecretToken/jenkins-admin-clusterrole.yaml
-kubectl apply -f SecretToken/jenkins-admin-clusterrolebinding.yaml
+kubectl apply -f service-account.yaml
 
 
 chmod +x cleanup_kubernetes.sh
 ./cleanup_kubernetes.sh
 
 
+
+
+kubectl get sa jenkins-admin -o jsonpath='{.secrets[0].name}'
+
+kubectl get secret jenkins-admin-token -o jsonpath='{.data.token}' | base64 --decode
+
+IDQCYtCWqpH3sif9m51WykccStfXrc0jiZbSqeF86K8
