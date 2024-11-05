@@ -49,7 +49,7 @@ pipeline {
                 //     }
                 // }
                 script {
-                    withKubeConfig([credentialsId: 'KUBE_CONFIG_CREDENTIALS_ID']) {
+                    withKubeConfig([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_TOKEN')]) {
                     sh 'kubectl apply -f mongo.yaml'
                     }
                 }
