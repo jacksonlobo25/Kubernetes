@@ -50,7 +50,7 @@ pipeline {
                 // }
                 script {
                     withKubeConfig([credentialsId: 'k8s-service-account-token']) {
-                    sh 'kubectl apply -f mongo.yaml'
+                    sh 'kubectl apply -f mongo.yaml --validate=false'
                     }
                 }
             }
