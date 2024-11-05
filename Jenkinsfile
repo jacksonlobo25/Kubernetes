@@ -34,6 +34,8 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_CONFIG_CREDENTIALS_ID')]) {
                         sh '''#!/bin/bash
+                        kubectl config set-credentials jenkins --token=$KUBE_TOKEN
+                        kubectl config set-context --current --user=jenkins
                         kubectl apply -f mongo.yaml
                         kubectl apply -f spring.yaml
                         '''
