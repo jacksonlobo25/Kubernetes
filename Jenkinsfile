@@ -30,22 +30,27 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_TOKEN')]) {
-                        sh '''#!/bin/bash
-                        # Set the Kubernetes credentials using the token
-                        kubectl config set-credentials jenkins --token=$KUBE_TOKEN
+                // script {
+                //     withCredentials([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_TOKEN')]) {
+                //         sh '''#!/bin/bash
+                //         # Set the Kubernetes credentials using the token
+                //         kubectl config set-credentials jenkins --token=$KUBE_TOKEN
                         
-                        # Set the context to point to the appropriate cluster and use the jenkins user
-                        kubectl config set-context jenkins-context --user=jenkins --cluster=kubernetes
+                //         # Set the context to point to the appropriate cluster and use the jenkins user
+                //         kubectl config set-context jenkins-context --user=jenkins --cluster=kubernetes
 
-                        # Use the context you just set
-                        kubectl config use-context jenkins-context
+                //         # Use the context you just set
+                //         kubectl config use-context jenkins-context
 
-                        # Apply the Kubernetes manifests
-                        kubectl apply -f mongo.yaml
-                        kubectl apply -f spring.yaml
-                        '''
+                //         # Apply the Kubernetes manifests
+                //         kubectl apply -f mongo.yaml
+                //         kubectl apply -f spring.yaml
+                //         '''
+                //     }
+                // }
+                script {
+                    withKubeConfig([credentialsId: 'KUBECONFIG']) {
+                    sh 'kubectl apply -f mongo.yaml'
                     }
                 }
             }
