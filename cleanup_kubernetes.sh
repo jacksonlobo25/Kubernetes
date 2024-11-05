@@ -17,13 +17,13 @@ kubectl delete pv --all
 echo "Deleting all Storage Classes (SCs)..."
 kubectl delete sc --all
 
-echo "Deleting Jenkins Service Accounts (SA)..."
-kubectl delete sa jenkins-admin
+# echo "Deleting Jenkins Service Accounts (SA)..."
+# kubectl delete sa jenkins-admin
 
-echo "Deleting Jenkins ClusterRole (CR)..."
-kubectl delete clusterrole jenkins-admin
+# echo "Deleting Jenkins ClusterRole (CR)..."
+# kubectl delete clusterrole jenkins-admin
 
-echo "Deleting Jenkins ClusterRole Binding(CRB)..."
-kubectl delete clusterrolebinding jenkins-admin 
+# echo "Deleting Jenkins ClusterRole Binding(CRB)..."
+# kubectl delete clusterrolebinding jenkins-admin 
 
 echo "Cleanup complete."

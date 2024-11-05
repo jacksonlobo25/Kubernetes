@@ -24,6 +24,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                         sh "docker push ${IMAGE_NAME}:${TAG}"
+                        // Push the latest tag as well
+                        sh "docker push ${IMAGE_NAME}:latest"
                     }
                 }
             }
@@ -32,13 +34,18 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG_FILE')]) {
-                        // Set the KUBECONFIG environment variable to the path of the kubeconfig file
                         sh "export KUBECONFIG=$KUBECONFIG_FILE"
                         
-                        // Run kubectl commands
-                        sh '''#!/bin/bash
-                        kubectl apply -f mongo.yaml --validate=false
-                        kubectl apply -f spring.yaml --validate=false
+                        // Replace the image tags in mongo.yaml and spring.yaml with the new image and tag
+                        sh """
+                            sed -i 's|${IMAGE_NAME}:.*|${IMAGE_NAME}:${TAG}|g' mongo.yaml
+                            sed -i 's|${IMAGE_NAME}:.*|${IMAGE_NAME}:${TAG}|g' spring.yaml
+                        """
+
+                        // Now apply the updated YAML files to Kubernetes
+                        sh '''
+                            kubectl apply -f mongo.yaml --validate=false
+                            kubectl apply -f spring.yaml --validate=false
                         '''
                     }
                 }
