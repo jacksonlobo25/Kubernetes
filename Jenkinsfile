@@ -29,7 +29,7 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') {
-            steps {
+            // steps {
                 // script {
                 //     withCredentials([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_TOKEN')]) {
                 //         sh '''#!/bin/bash
@@ -48,12 +48,12 @@ pipeline {
                 //         '''
                 //     }
                 // }
-                script {
+                steps {
                     withKubeConfig([credentialsId: 'KUBECONFIG']) {
                     sh 'kubectl apply -f mongo.yaml'
                     }
                 }
-            }
+            // }
         }
     }
 }
