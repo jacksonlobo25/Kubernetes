@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        KUBECONFIG = '~/.kube/config'
+        KUBECONFIG = '/home/jackson/kubeconfig.yaml'
         KUBE_CONFIG_CREDENTIALS_ID = credentials('k8s-service-account-token') 
         IMAGE_NAME = "jacksonlobo/springboot-app"
         TAG = "${env.BUILD_NUMBER}"
@@ -31,14 +31,16 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Export KUBECONFIG environment variable if necessary
-                    sh "export KUBECONFIG=$KUBECONFIG"
-                    
-                    // Apply Kubernetes resources
-                    sh '''#!/bin/bash
-                    kubectl apply -f mongo.yaml --validate=false
-                    kubectl apply -f spring.yaml --validate=false
-                    '''
+                    withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG_FILE')]) {
+                        // Set the KUBECONFIG environment variable to the path of the kubeconfig file
+                        sh "export KUBECONFIG=$KUBECONFIG_FILE"
+                        
+                        // Run kubectl commands
+                        sh '''#!/bin/bash
+                        kubectl apply -f mongo.yaml --validate=false
+                        kubectl apply -f spring.yaml --validate=false
+                        '''
+                    }
                 }
             }
         }
