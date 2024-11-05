@@ -2,6 +2,9 @@ kubectl apply -f mongo.yaml
 
 kubectl apply -f spring.yaml
 
+kubectl apply -f service-account.yaml
+
+
 chmod +x cleanup_kubernetes.sh
 ./cleanup_kubernetes.sh
 
