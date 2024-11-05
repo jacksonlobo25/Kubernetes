@@ -30,28 +30,15 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
-                // script {
-                //     withCredentials([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_TOKEN')]) {
-                //         sh '''#!/bin/bash
-                //         # Set the Kubernetes credentials using the token
-                //         kubectl config set-credentials jenkins --token=$KUBE_TOKEN
-                        
-                //         # Set the context to point to the appropriate cluster and use the jenkins user
-                //         kubectl config set-context jenkins-context --user=jenkins --cluster=kubernetes
-
-                //         # Use the context you just set
-                //         kubectl config use-context jenkins-context
-
-                //         # Apply the Kubernetes manifests
-                //         kubectl apply -f mongo.yaml
-                //         kubectl apply -f spring.yaml
-                //         '''
-                //     }
-                // }
                 script {
-                    withKubeConfig([credentialsId: 'k8s-service-account-token']) {
-                    sh 'kubectl apply -f mongo.yaml --validate=false'
-                    }
+                    // Export KUBECONFIG environment variable if necessary
+                    sh "export KUBECONFIG=$KUBECONFIG"
+                    
+                    // Apply Kubernetes resources
+                    sh '''#!/bin/bash
+                    kubectl apply -f mongo.yaml --validate=false
+                    kubectl apply -f spring.yaml --validate=false
+                    '''
                 }
             }
         }
