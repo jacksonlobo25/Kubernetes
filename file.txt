@@ -2,7 +2,9 @@ kubectl apply -f mongo.yaml
 
 kubectl apply -f spring.yaml
 
-kubectl apply -f service-account.yaml
+kubectl apply -f jenkins-admin-sa.yaml
+kubectl apply -f jenkins-admin-clusterrole.yaml
+kubectl apply -f jenkins-admin-clusterrolebinding.yaml
 
 
 chmod +x cleanup_kubernetes.sh
