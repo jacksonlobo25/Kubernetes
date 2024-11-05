@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        KUBECONFIG = '~/.kube/config'
         KUBE_CONFIG_CREDENTIALS_ID = credentials('k8s-service-account-token') 
         IMAGE_NAME = "jacksonlobo/springboot-app"
         TAG = "${env.BUILD_NUMBER}"
@@ -28,32 +29,17 @@ pipeline {
                 }
             }
         }
-        stage('Deploy MongoDB') {
-
+        stage('Deploy to Kubernetes') {
             steps {
-
-                withCredentials([kubeconfig(credentialsId: KUBE_CONFIG_CREDENTIALS_ID)]) {
-
-                    sh "kubectl apply -f mongo.yaml"
-
+                script {
+                    withCredentials([string(credentialsId: 'k8s-service-account-token', variable: 'KUBE_CONFIG_CREDENTIALS_ID')]) {
+                        sh '''#!/bin/bash
+                        kubectl apply -f mongo.yaml
+                        kubectl apply -f spring.yaml
+                        '''
+                    }
                 }
-
             }
-
-        }
- 
-        stage('Deploy Spring Boot App') {
-
-            steps {
-
-                withCredentials([kubeconfig(credentialsId: KUBE_CONFIG_CREDENTIALS_ID)]) {
-
-                    sh "kubectl apply -f spring.yaml"
-
-                }
-
-            }
-
         }
     }
 }
