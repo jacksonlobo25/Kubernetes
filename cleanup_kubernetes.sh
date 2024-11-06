@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script will delete all Kubernetes resources (pods, services, etc.), configmaps, PVCs, and PVs in the dev and prod namespaces.
+# This script will delete all Kubernetes resources (pods, services, etc.), configmaps, PVCs, PVs, and namespaces dev and prod.
 
 NAMESPACES=("dev" "prod")
 
@@ -19,15 +19,9 @@ for NAMESPACE in "${NAMESPACES[@]}"; do
 
   echo "Deleting all Storage Classes (SCs) in namespace $NAMESPACE..."
   kubectl delete sc --all -n $NAMESPACE
+
+  echo "Deleting namespace $NAMESPACE..."
+  kubectl delete namespace $NAMESPACE
 done
-
-# echo "Deleting Jenkins Service Accounts (SA) in namespace $NAMESPACE..."
-# kubectl delete sa jenkins-admin -n $NAMESPACE
-
-# echo "Deleting Jenkins ClusterRole (CR) in namespace $NAMESPACE..."
-# kubectl delete clusterrole jenkins-admin -n $NAMESPACE
-
-# echo "Deleting Jenkins ClusterRole Binding (CRB) in namespace $NAMESPACE..."
-# kubectl delete clusterrolebinding jenkins-admin -n $NAMESPACE
 
 echo "Cleanup complete."
