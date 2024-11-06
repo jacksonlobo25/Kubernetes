@@ -68,7 +68,8 @@ pipeline {
                         
                         // Replace the ${NAMESPACE} placeholder in mongo.yaml with the selected namespace
                         sh """
-                            sed -i 's|\\${NAMESPACE}|${namespace}|g' mongo.yaml
+                            sed -i 's|${NAMESPACE}|${namespace}|g' mongo.yaml
+                            sed -i 's|${NAMESPACE}|${namespace}|g' spring.yaml
                         """
 
                         // Deploy to the selected namespace (either 'dev' or 'prod')
