@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         // Define a choice parameter for environment (DEV or PROD)
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Choose the deployment environment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Choose the Deployment Environment')
     }
 
     environment {
@@ -66,12 +66,11 @@ pipeline {
                     withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG_FILE')]) {
                         sh "export KUBECONFIG=$KUBECONFIG_FILE"
                         
-                        // Replace the image tags in mongo.yaml and spring.yaml with the new image and tag
+                        // Replace the ${NAMESPACE} placeholder in mongo.yaml with the selected namespace
                         sh """
-                            sed -i 's|${IMAGE_NAME}:.*|${IMAGE_NAME}:${TAG}|g' mongo.yaml
-                            sed -i 's|${IMAGE_NAME}:.*|${IMAGE_NAME}:${TAG}|g' spring.yaml
+                            sed -i 's|${NAMESPACE}|${namespace}|g' mongo.yaml
                         """
-                        
+
                         // Deploy to the selected namespace (either 'dev' or 'prod')
                         sh """
                             kubectl apply -f mongo.yaml --namespace=${namespace} --validate=false
