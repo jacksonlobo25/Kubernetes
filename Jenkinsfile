@@ -9,7 +9,6 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         KUBECONFIG = '/home/jackson/kubeconfig.yaml'
-        KUBE_CONFIG_CREDENTIALS_ID = credentials('k8s-service-account-token') 
         IMAGE_NAME = "jacksonlobo/springboot-app"
         TAG = "${env.BUILD_NUMBER}"
         NAMESPACE = 'default'
