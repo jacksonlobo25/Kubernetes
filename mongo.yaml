@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: mongo-pv
-  namespace: ${NAMESPACE}
+  namespace: default
 spec:
   capacity:
     storage: 1Gi
@@ -19,7 +19,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongo-pvc
-  namespace: ${NAMESPACE}
+  namespace: default
 spec:
   resources:
     requests:
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mongodb-config
-  namespace: ${NAMESPACE}
+  namespace: default
 data:
   MONGO_INITDB_ROOT_USERNAME: springuser
   MONGO_INITDB_ROOT_PASSWORD: springpassword
@@ -45,7 +45,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb
-  namespace: ${NAMESPACE}
+  namespace: default
 spec:
   selector:
     matchLabels:
@@ -78,7 +78,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongodb-service
-  namespace: ${NAMESPACE}
+  namespace: default
 spec:
   ports:
     - port: 27017

@@ -12,6 +12,7 @@ pipeline {
         KUBE_CONFIG_CREDENTIALS_ID = credentials('k8s-service-account-token') 
         IMAGE_NAME = "jacksonlobo/springboot-app"
         TAG = "${env.BUILD_NUMBER}"
+        NAMESPACE = 'default'
     }
 
     stages {
@@ -70,6 +71,11 @@ pipeline {
                         sh """
                             sed -i 's|${NAMESPACE}|${namespace}|g' mongo.yaml
                             sed -i 's|${NAMESPACE}|${namespace}|g' spring.yaml
+                        """
+
+                         sh """
+                            sed -i 's|${IMAGE_NAME}:.*|${IMAGE_NAME}:${TAG}|g' mongo.yaml
+                            sed -i 's|${IMAGE_NAME}:.*|${IMAGE_NAME}:${TAG}|g' spring.yaml
                         """
 
                         // Deploy to the selected namespace (either 'dev' or 'prod')
